@@ -33,13 +33,13 @@
       </div>
     </form>
   </div>
-
+  <script src="data.js"></script>
   <script>
     const urlParams = new URLSearchParams(window.location.search);
     const catId = urlParams.get('id');
 
     // Pobranie danych kota do edycji
-    fetch(`https://localhost:7008/api/cats/${catId}`)
+    fetch(Api + `/api/cats/${catId}`)
       .then(response => response.json())
       .then(cat => {
         // Wypełnienie formularza danymi kota
@@ -72,7 +72,7 @@
       };
 
       // Wysłanie danych edycji do API
-      fetch(`https://localhost:7008/api/cats/${catId}`, {
+      fetch(Api + `/api/cats/${catId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json'

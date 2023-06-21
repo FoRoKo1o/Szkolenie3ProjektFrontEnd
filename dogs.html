@@ -34,10 +34,10 @@
       <tbody></tbody>
     </table>
   </div>
-
+  <script src="data.js"></script>
   <script>
     // Pobranie danych z API
-    fetch('https://localhost:7008/api/dogs')
+    fetch(Api + '/api/dogs')
       .then(response => response.json())
       .then(data => {
         const dogsTable = document.getElementById('dogsTable');
@@ -65,37 +65,8 @@
       .catch(error => {
         console.error('Wystąpił błąd podczas pobierania danych z API:', error);
       });
-
-    // Funkcja do edycji psa
-    function editDog(id) {
-      // Przekierowanie na podstronę edycji z odpowiednim ID
-      window.location.href = `edit_dog.html?id=${id}`;
-    }
-    function goToIndex() {
-      window.location.href = 'index.html';
-    }
-    // Funkcja do przejścia do podstrony dodawania psa
-    function goToAddDog() {
-      window.location.href = 'add_dog.html';
-    }
-
-    // Funkcja do usuwania psa
-    function deleteDog(id) {
-      fetch(`https://localhost:7008/api/dogs/${id}`, {
-        method: 'DELETE'
-      })
-      .then(response => {
-        if (response.ok) {
-          // Usunięto psa, odświeżenie strony
-          location.reload();
-        } else {
-          console.error('Wystąpił błąd podczas usuwania psa');
-        }
-      })
-      .catch(error => {
-        console.error('Wystąpił błąd podczas usuwania psa:', error);
-      });
-    }
   </script>
+    <script src="dog_script.js"></script>
+    <script src="shared_script.js"></script>
 </body>
 </html>

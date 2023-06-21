@@ -34,10 +34,10 @@
       <tbody></tbody>
     </table>
   </div>
-
+  <script src="data.js"></script>
   <script>
     // Pobranie danych z API
-    fetch('https://localhost:7008/api/cats')
+    fetch(Api + '/api/cats')
       .then(response => response.json())
       .then(data => {
         const catsTable = document.getElementById('catsTable');
@@ -65,37 +65,8 @@
       .catch(error => {
         console.error('Wystąpił błąd podczas pobierania danych z API:', error);
       });
-
-    // Funkcja do edycji kota
-    function editCat(id) {
-      // Przekierowanie na podstronę edycji z odpowiednim ID
-      window.location.href = `edit_cat.html?id=${id}`;
-    }
-    function goToIndex() {
-      window.location.href = 'index.html';
-    }
-    // Funkcja do przejścia do podstrony dodawania kota
-    function goToAddCat() {
-      window.location.href = 'add_cat.html';
-    }
-
-    // Funkcja do usuwania kota
-    function deleteCat(id) {
-      fetch(`https://localhost:7008/api/cats/${id}`, {
-        method: 'DELETE'
-      })
-      .then(response => {
-        if (response.ok) {
-          // Usunięto kota, odświeżenie strony
-          location.reload();
-        } else {
-          console.error('Wystąpił błąd podczas usuwania kota');
-        }
-      })
-      .catch(error => {
-        console.error('Wystąpił błąd podczas usuwania kota:', error);
-      });
-    }
   </script>
+  <script src="cat_script.js"></script>
+  <script src="shared_script.js"></script>
 </body>
 </html>

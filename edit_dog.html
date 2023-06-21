@@ -33,13 +33,13 @@
       </div>
     </form>
   </div>
-
+  <script src="data.js"></script>
   <script>
     const urlParams = new URLSearchParams(window.location.search);
     const dogId = urlParams.get('id');
 
     // Pobranie danych psa do edycji
-    fetch(`https://localhost:7008/api/dogs/${dogId}`)
+    fetch(Api + `/api/dogs/${dogId}`)
       .then(response => response.json())
       .then(dog => {
         // Wypełnienie formularza danymi psa
@@ -72,7 +72,7 @@
       };
 
       // Wysłanie danych edycji do API
-      fetch(`https://localhost:7008/api/dogs/${dogId}`, {
+      fetch(Api + `/api/dogs/${dogId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json'

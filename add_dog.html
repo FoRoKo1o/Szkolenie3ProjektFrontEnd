@@ -5,7 +5,6 @@
   <title>Add New Dog</title>
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
   <link rel="stylesheet" type="text/css" href="style.css">
-  <script src="index.js"></script>
 </head>
 <body>
   <div class="container">
@@ -28,50 +27,11 @@
         <textarea class="form-control" id="description" required></textarea>
       </div>
       <button type="submit" class="btn btn-primary">Add</button>
-      <button type="button" class="btn btn-secondary" onclick="goToIndex()">Cancel</button>
+      <button type="button" class="btn btn-secondary" onclick="goToDog()">Cancel</button>
     </form>
   </div>
-
-  <script>
-    // Funkcja do przejścia do strony głównej
-    function goToIndex() {
-      window.location.href = 'dogs.html';
-    }
-
-    // Funkcja do obsługi dodawania nowego psa
-    document.getElementById('addDogForm').addEventListener('submit', function(event) {
-      event.preventDefault();
-
-      const breed = document.getElementById('breed').value;
-      const weight = parseInt(document.getElementById('weight').value);
-      const color = document.getElementById('color').value;
-      const description = document.getElementById('description').value;
-
-      const dogData = {
-        breed: breed,
-        weight: weight,
-        color: color,
-        description: description
-      };
-
-      fetch('https://localhost:7008/api/dogs', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(dogData)
-      })
-      .then(response => {
-        if (response.ok) {
-          window.location.href = 'dogs.html';
-        } else {
-          console.error('Wystąpił błąd podczas dodawania psa');
-        }
-      })
-      .catch(error => {
-        console.error('Wystąpił błąd podczas dodawania psa:', error);
-      });
-    });
-  </script>
+  <script src="data.js"></script>
+  <script src="dog_script.js">  </script>
+  
 </body>
 </html>
