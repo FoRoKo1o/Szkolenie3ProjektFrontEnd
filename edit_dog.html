@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Edytuj psa</title>
+  <!-- Dodanie linku do pliku CSS Bootstrap -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Edytuj psa</h1>
+    <form id="editDogForm">
+      <div class="form-group">
+        <label for="breed">Breed:</label>
+        <input type="text" class="form-control" id="breed" name="breed" required>
+      </div>
+      <div class="form-group">
+        <label for="weight">Weight:</label>
+        <input type="number" class="form-control" id="weight" name="weight" min="0" max="100" required>
+      </div>
+      <div class="form-group">
+        <label for="color">Color:</label>
+        <input type="text" class="form-control" id="color" name="color" required>
+      </div>
+      <div class="form-group">
+        <label for="description">Description:</label>
+        <textarea class="form-control" id="description" name="description" required></textarea>
+      </div>
+      <div class="form-group">
+        <button class="btn btn-secondary" onclick="cancelEdit()">Cancel</button>
+        <button class="btn btn-primary" type="submit">Save</button>
+      </div>
+    </form>
+  </div>
+
+  <script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const dogId = urlParams.get('id');
+
+    // Pobranie danych psa do edycji
+    fetch(`https://localhost:7008/api/dogs/${dogId}`)
+      .then(response => response.json())
+      .then(dog => {
+        // Wypełnienie formularza danymi psa
+        document.getElementById('breed').value = dog.breed;
+        document.getElementById('weight').value = dog.weight;
+        document.getElementById('color').value = dog.color;
+        document.getElementById('description').value = dog.description;
+      })
+      .catch(error => {
+        console.error('Wystąpił błąd podczas pobierania danych psa:', error);
+      });
+
+    // Obsługa zapisu edycji psa
+    document.getElementById('editDogForm').addEventListener('submit', function(event) {
+      event.preventDefault();
+
+      // Pobranie wartości z formularza
+      const breed = document.getElementById('breed').value;
+      const weight = document.getElementById('weight').value;
+      const color = document.getElementById('color').value;
+      const description = document.getElementById('description').value;
+
+      // Przygotowanie danych do wysłania
+      const data = {
+        breed,
+        weight,
+        color,
+        description,
+        id: dogId
+      };
+
+      // Wysłanie danych edycji do API
+      fetch(`https://localhost:7008/api/dogs/${dogId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+      })
+      .then(response => {
+        if (response.ok) {
+          window.location.href = 'dogs.html';
+        } else {
+          console.error('Wystąpił błąd podczas zapisywania edycji psa.');
+        }
+      })
+      .catch(error => {
+        console.error('Wystąpił błąd podczas zapisywania edycji psa:', error);
+      });
+    });
+
+    // Obsługa anulowania edycji
+    function cancelEdit() {
+      window.location.href = 'dogs.html';
+    }
+  </script>
+</body>
+</html>

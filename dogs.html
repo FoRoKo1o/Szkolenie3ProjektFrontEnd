@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Dogs</title>
+  <!-- Dodanie linku do pliku CSS Bootstrap -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <h2>Dogs</h2>
+    <table class="table">
+      <tr>
+        <td>
+          <button class="btn btn-primary mb-3" onclick="goToAddDog()">Add New Dog</button>
+        </td>
+        <td>
+          <button class="btn btn-danger mb-3" onclick="goToIndex()">Back to Index</button>
+      </tr>
+    </table>
+    <table id="dogsTable" class="table table-striped">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Breed</th>
+          <th>Weight</th>
+          <th>Color</th>
+          <th>Description</th>
+          <th>Edit</th>
+          <th>Delete</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <script>
+    // Pobranie danych z API
+    fetch('https://localhost:7008/api/dogs')
+      .then(response => response.json())
+      .then(data => {
+        const dogsTable = document.getElementById('dogsTable');
+        const tbody = dogsTable.getElementsByTagName('tbody')[0];
+
+        // Wygenerowanie wierszy tabeli na podstawie danych z API
+        data.forEach(dog => {
+          const row = document.createElement('tr');
+          row.innerHTML = `
+            <td>${dog.id}</td>
+            <td>${dog.breed}</td>
+            <td>${dog.weight}</td>
+            <td>${dog.color}</td>
+            <td>${dog.description}</td>
+            <td>
+              <button class="btn btn-primary" onclick="editDog(${dog.id})">Edit</button>
+            </td>
+            <td>
+              <button class="btn btn-danger" onclick="deleteDog(${dog.id})">Delete</button>
+            </td>
+          `;
+          tbody.appendChild(row);
+        });
+      })
+      .catch(error => {
+        console.error('Wystąpił błąd podczas pobierania danych z API:', error);
+      });
+
+    // Funkcja do edycji psa
+    function editDog(id) {
+      // Przekierowanie na podstronę edycji z odpowiednim ID
+      window.location.href = `edit_dog.html?id=${id}`;
+    }
+    function goToIndex() {
+      window.location.href = 'index.html';
+    }
+    // Funkcja do przejścia do podstrony dodawania psa
+    function goToAddDog() {
+      window.location.href = 'add_dog.html';
+    }
+
+    // Funkcja do usuwania psa
+    function deleteDog(id) {
+      fetch(`https://localhost:7008/api/dogs/${id}`, {
+        method: 'DELETE'
+      })
+      .then(response => {
+        if (response.ok) {
+          // Usunięto psa, odświeżenie strony
+          location.reload();
+        } else {
+          console.error('Wystąpił błąd podczas usuwania psa');
+        }
+      })
+      .catch(error => {
+        console.error('Wystąpił błąd podczas usuwania psa:', error);
+      });
+    }
+  </script>
+</body>
+</html>

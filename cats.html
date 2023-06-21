@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Cats</title>
+  <!-- Dodanie linku do pliku CSS Bootstrap -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <h2>Cats</h2>
+    <table class="table">
+      <tr>
+        <td>
+          <button class="btn btn-primary mb-3" onclick="goToAddCat()">Add New Cat</button>
+        </td>
+        <td>
+          <button class="btn btn-danger mb-3" onclick="goToIndex()">Back to Index</button>
+      </tr>
+    </table>
+    <table id="catsTable" class="table table-striped">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Breed</th>
+          <th>Weight</th>
+          <th>Color</th>
+          <th>Description</th>
+          <th>Edit</th>
+          <th>Delete</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <script>
+    // Pobranie danych z API
+    fetch('https://localhost:7008/api/cats')
+      .then(response => response.json())
+      .then(data => {
+        const catsTable = document.getElementById('catsTable');
+        const tbody = catsTable.getElementsByTagName('tbody')[0];
+
+        // Wygenerowanie wierszy tabeli na podstawie danych z API
+        data.forEach(cat => {
+          const row = document.createElement('tr');
+          row.innerHTML = `
+            <td>${cat.id}</td>
+            <td>${cat.breed}</td>
+            <td>${cat.weight}</td>
+            <td>${cat.color}</td>
+            <td>${cat.description}</td>
+            <td>
+              <button class="btn btn-primary" onclick="editCat(${cat.id})">Edit</button>
+            </td>
+            <td>
+              <button class="btn btn-danger" onclick="deleteCat(${cat.id})">Delete</button>
+            </td>
+          `;
+          tbody.appendChild(row);
+        });
+      })
+      .catch(error => {
+        console.error('Wystąpił błąd podczas pobierania danych z API:', error);
+      });
+
+    // Funkcja do edycji kota
+    function editCat(id) {
+      // Przekierowanie na podstronę edycji z odpowiednim ID
+      window.location.href = `edit_cat.html?id=${id}`;
+    }
+    function goToIndex() {
+      window.location.href = 'index.html';
+    }
+    // Funkcja do przejścia do podstrony dodawania kota
+    function goToAddCat() {
+      window.location.href = 'add_cat.html';
+    }
+
+    // Funkcja do usuwania kota
+    function deleteCat(id) {
+      fetch(`https://localhost:7008/api/cats/${id}`, {
+        method: 'DELETE'
+      })
+      .then(response => {
+        if (response.ok) {
+          // Usunięto kota, odświeżenie strony
+          location.reload();
+        } else {
+          console.error('Wystąpił błąd podczas usuwania kota');
+        }
+      })
+      .catch(error => {
+        console.error('Wystąpił błąd podczas usuwania kota:', error);
+      });
+    }
+  </script>
+</body>
+</html>

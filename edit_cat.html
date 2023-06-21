@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Edytuj kota</title>
+  <!-- Dodanie linku do pliku CSS Bootstrap -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Edytuj kota</h1>
+    <form id="editCatForm">
+      <div class="form-group">
+        <label for="breed">Breed:</label>
+        <input type="text" class="form-control" id="breed" name="breed" required>
+      </div>
+      <div class="form-group">
+        <label for="weight">Weight:</label>
+        <input type="number" class="form-control" id="weight" name="weight" min="0" max="100" required>
+      </div>
+      <div class="form-group">
+        <label for="color">Color:</label>
+        <input type="text" class="form-control" id="color" name="color" required>
+      </div>
+      <div class="form-group">
+        <label for="description">Description:</label>
+        <textarea class="form-control" id="description" name="description" required></textarea>
+      </div>
+      <div class="form-group">
+        <button class="btn btn-secondary" onclick="cancelEdit()">Cancel</button>
+        <button class="btn btn-primary" type="submit">Save</button>
+      </div>
+    </form>
+  </div>
+
+  <script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const catId = urlParams.get('id');
+
+    // Pobranie danych kota do edycji
+    fetch(`https://localhost:7008/api/cats/${catId}`)
+      .then(response => response.json())
+      .then(cat => {
+        // Wypełnienie formularza danymi kota
+        document.getElementById('breed').value = cat.breed;
+        document.getElementById('weight').value = cat.weight;
+        document.getElementById('color').value = cat.color;
+        document.getElementById('description').value = cat.description;
+      })
+      .catch(error => {
+        console.error('Wystąpił błąd podczas pobierania danych kota:', error);
+      });
+
+    // Obsługa zapisu edycji kota
+    document.getElementById('editCatForm').addEventListener('submit', function(event) {
+      event.preventDefault();
+
+      // Pobranie wartości z formularza
+      const breed = document.getElementById('breed').value;
+      const weight = document.getElementById('weight').value;
+      const color = document.getElementById('color').value;
+      const description = document.getElementById('description').value;
+
+      // Przygotowanie danych do wysłania
+      const data = {
+        breed,
+        weight,
+        color,
+        description,
+        id: catId
+      };
+
+      // Wysłanie danych edycji do API
+      fetch(`https://localhost:7008/api/cats/${catId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+      })
+      .then(response => {
+        if (response.ok) {
+          window.location.href = 'cats.html';
+        } else {
+          console.error('Wystąpił błąd podczas zapisywania edycji kota.');
+        }
+      })
+      .catch(error => {
+        console.error('Wystąpił błąd podczas zapisywania edycji kota:', error);
+      });
+    });
+
+    // Obsługa anulowania edycji
+    function cancelEdit() {
+      window.location.href = 'cats.html';
+    }
+  </script>
+</body>
+</html>
