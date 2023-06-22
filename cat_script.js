@@ -42,6 +42,9 @@ function editCat(id) {
 function goToAddCat() {
  window.location.href = 'add_cat.html';
 }
+function goToCat() {
+  window.location.href = 'cats.html';
+}
 
 // Funkcja do usuwania kota
 function deleteCat(id) {
